@@ -23,7 +23,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		A7BBACA41FC5BBA000AEC92A /* Jeu de la vie */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "Jeu de la vie"; path = "/Users/valentin/Documents/Jeu de la vie/build/Debug/Jeu de la vie"; sourceTree = "<absolute>"; };
+		A7675BB21FDA7B25003A627F /* Jeu de la vie */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = "Jeu de la vie"; path = "/Users/valentin/Documents/Jeu de la vie/build/Debug/Jeu de la vie"; sourceTree = "<absolute>"; };
 		A7BBACAE1FC5BBE100AEC92A /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -62,7 +62,7 @@
 			);
 			name = "Jeu de la vie";
 			productName = "Jeu de la vie";
-			productReference = A7BBACA41FC5BBA000AEC92A /* Jeu de la vie */;
+			productReference = A7675BB21FDA7B25003A627F /* Jeu de la vie */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
