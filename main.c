@@ -1,9 +1,9 @@
 //
 //  main.c
-//  Jeu de la vie
+//  GameOfLife By Conway.
 //  Ce jeu c'est la vie
 //  Created by Valentin Monnot on 22/11/2017.
-//  Copyleft 2017 Valentin Monnot. NO MORE rights reserved.
+//  ESIEA Laval TD Info.
 //
 
 #include <stdio.h>
