@@ -1,0 +1,1 @@
+Cette partie bonus intègre un menu avec différente option et réglage et permet de lancer un programme avec deux balles rebondissant à l'infini tout en gardant leur tracé, l'une des deux balles peut aussi se faire repositionner manuellement en cliquant avec la souris.

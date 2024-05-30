@@ -1,0 +1,33 @@
+---
+BasedOnStyle: Microsoft
+UseTab: Never
+Standard: c++14
+ColumnLimit: 120
+IndentWidth: 4
+SortIncludes: Never
+InsertBraces: true
+AlignOperands: AlignAfterOperator
+BraceWrapping:
+  AfterClass: true
+  BeforeElse: false
+  BeforeWhile: false
+  AfterFunction: true
+  AfterNamespace: false
+  AfterCaseLabel: false
+  AfterControlStatement: Never
+IndentCaseBlocks: false
+IndentCaseLabels: true
+IndentPPDirectives: BeforeHash
+AlignEscapedNewlines: Left
+AccessModifierOffset: 0
+NamespaceIndentation: None
+IndentAccessModifiers: true
+AlignConsecutiveMacros: true
+ContinuationIndentWidth: 4
+BreakBeforeBinaryOperators: NonAssignment
+PackConstructorInitializers: NextLineOnly
+EmptyLineAfterAccessModifier: Never
+EmptyLineBeforeAccessModifier: LogicalBlock
+AlwaysBreakTemplateDeclarations: Yes
+---
+
