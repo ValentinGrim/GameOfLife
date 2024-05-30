@@ -1,7 +1,7 @@
 #ifdef _WIN32
-#include <SDL.h>
+    #include <SDL.h>
 #else
-#include <SDL2/SDL.h>
+    #include <SDL2/SDL.h>
 #endif
 
 #include <stdio.h>
@@ -11,18 +11,19 @@
 #include "gameMetrics.h"
 #include "../tools.h"
 
-
-Metrics * newMetrics(Textures * textures)
+Metrics *newMetrics(Textures *textures)
 {
-    Metrics * metrics = NULL;
+    Metrics *metrics = NULL;
     int w, h;
 
-    if (!textures)
+    if (!textures) {
         return NULL;
+    }
 
     metrics = (Metrics *)calloc(1, sizeof(Metrics));
-    if (!metrics)
+    if (!metrics) {
         return NULL;
+    }
 
     metrics->screen.x = 0;
     metrics->screen.y = 0;
@@ -41,34 +42,30 @@ Metrics * newMetrics(Textures * textures)
     metrics->gameArea.w = w;
     metrics->gameArea.h = h;
 
-		/*pour centrer strum proprement faire spawn en calculant largeur strum*/
+    /*pour centrer strum proprement faire spawn en calculant largeur strum*/
 
- return metrics;
+    return metrics;
 }
 
-void freeMetrics(Metrics * metrics)
+void freeMetrics(Metrics *metrics)
 {
     free(metrics);
 }
 
-void initMetrics(Metrics * metrics, int nbStrings)
+void initMetrics(Metrics *metrics, int nbStrings)
 {
     // TODO : calculer les positions des �l�ments en fonction du nombre de cordes
-		metrics->string = calloc(nbStrings, sizeof(SDL_Rect));
-		metrics->strum = calloc(nbStrings, sizeof(SDL_Rect));
+    metrics->string = calloc(nbStrings, sizeof(SDL_Rect));
+    metrics->strum = calloc(nbStrings, sizeof(SDL_Rect));
 
-		int i;
-		for (i=0; i<nbStrings; i++)
-		{
-			// calcul position cordes sur la gameArea)
-			metrics->string[i].x=((metrics->gameArea.w)/(nbStrings + 1))*(i+1)+metrics->gameArea.x;
-			metrics->string[i].y=(metrics->gameArea.y)+(metrics->gameArea.h)*0.2;
+    int i;
+    for (i = 0; i < nbStrings; i++) {
+        // calcul position cordes sur la gameArea)
+        metrics->string[i].x = ((metrics->gameArea.w) / (nbStrings + 1)) * (i + 1) + metrics->gameArea.x;
+        metrics->string[i].y = (metrics->gameArea.y) + (metrics->gameArea.h) * 0.2;
 
-			//calcul position strum sur la game area et coordonnées adaptées pour les avoir centré en fonction des cordes
-			metrics->strum[i].x=((metrics->gameArea.w)/(nbStrings + 1))*(i+1)+(metrics->gameArea.x)*0.95;
-			metrics->strum[i].y=(metrics->gameArea.y)+(metrics->gameArea.h)*0.85;
-
-
-		}
-
-	}
+        // calcul position strum sur la game area et coordonnées adaptées pour les avoir centré en fonction des cordes
+        metrics->strum[i].x = ((metrics->gameArea.w) / (nbStrings + 1)) * (i + 1) + (metrics->gameArea.x) * 0.95;
+        metrics->strum[i].y = (metrics->gameArea.y) + (metrics->gameArea.h) * 0.85;
+    }
+}

@@ -1,10 +1,10 @@
 
 #ifdef _WIN32
-#include <SDL.h>
-#include <SDL_image.h>
+    #include <SDL.h>
+    #include <SDL_image.h>
 #else
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
+    #include <SDL2/SDL.h>
+    #include <SDL2/SDL_image.h>
 #endif
 
 #include <stdio.h>
@@ -14,81 +14,94 @@
 #include "textures.h"
 #include "mainWindow.h"
 
-Textures * newTextures(SDL_Renderer *renderer)
+Textures *newTextures(SDL_Renderer *renderer)
 {
-    Textures * textures = NULL;
+    Textures *textures = NULL;
     char imgPath[1024] = "../Images/";
     char *posToWrite = imgPath + 10;
     int i;
 
-    if (!renderer)
+    if (!renderer) {
         return NULL;
+    }
 
     textures = (Textures *)calloc(1, sizeof(Textures));
 
-    for (i = 0; i < MAX_STRINGS; i++)
-    {
+    for (i = 0; i < MAX_STRINGS; i++) {
         // Chargement de la note
         sprintf(posToWrite, "note_%d.png", i + 1);
         textures->notes[i] = loadTexture(imgPath, renderer);
-        if (textures->notes[i] == NULL) goto ERROR_LABEL;
+        if (textures->notes[i] == NULL) {
+            goto ERROR_LABEL;
+        }
     }
 
-    for (i = 0; i < MAX_STRINGS; i++)
-    {
+    for (i = 0; i < MAX_STRINGS; i++) {
         // Chargement de la strums
         sprintf(posToWrite, "strum_%d.png", i + 1);
         textures->strum[i] = loadTexture(imgPath, renderer);
-        if (textures->strum[i] == NULL) goto ERROR_LABEL;
+        if (textures->strum[i] == NULL) {
+            goto ERROR_LABEL;
+        }
 
         // Chargement de la strumshelds
         sprintf(posToWrite, "strum_%d_held.png", i + 1);
         textures->strum_held[i] = loadTexture(imgPath, renderer);
-        if (textures->strum_held[i] == NULL) goto ERROR_LABEL;
-
+        if (textures->strum_held[i] == NULL) {
+            goto ERROR_LABEL;
+        }
     }
-
 
     // Chargement du fond
     sprintf(posToWrite, "background.png");
     textures->background = loadTexture(imgPath, renderer);
-    if (textures->background == NULL) goto ERROR_LABEL;
-
+    if (textures->background == NULL) {
+        goto ERROR_LABEL;
+    }
 
     // Chargement du combo
     sprintf(posToWrite, "combo.png");
     textures->combo = loadTexture(imgPath, renderer);
-    if (textures->combo == NULL) goto ERROR_LABEL;
+    if (textures->combo == NULL) {
+        goto ERROR_LABEL;
+    }
 
-    for (int i = 0; i<MAX_COMBO; i++)
-      {
+    for (int i = 0; i < MAX_COMBO; i++) {
         // Chargement des images des chiffres du score
         sprintf(posToWrite, "default-%d.png", i);
         textures->chiffres[i] = loadTexture(imgPath, renderer);
-        if (textures->chiffres[i] == NULL) goto ERROR_LABEL;
+        if (textures->chiffres[i] == NULL) {
+            goto ERROR_LABEL;
+        }
 
         // Chargement des images des chiffres des highscores
         sprintf(posToWrite, "score-%d.png", i);
         textures->score[i] = loadTexture(imgPath, renderer);
-        if (textures->score[i] == NULL) goto ERROR_LABEL;
-      }
-
+        if (textures->score[i] == NULL) {
+            goto ERROR_LABEL;
+        }
+    }
 
     // Chargement du fond de la zone de jeu
     sprintf(posToWrite, "game_area.png");
     textures->gameArea = loadTexture(imgPath, renderer);
-    if (textures->gameArea == NULL) goto ERROR_LABEL;
-
+    if (textures->gameArea == NULL) {
+        goto ERROR_LABEL;
+    }
 
     // Chargement du fond de la corde
     sprintf(posToWrite, "string.png");
     textures->string = loadTexture(imgPath, renderer);
-    if (textures->string == NULL) goto ERROR_LABEL;
+    if (textures->string == NULL) {
+        goto ERROR_LABEL;
+    }
 
     // Chargement de l arriere plan des highScores
     sprintf(posToWrite, "backhighscores.png");
     textures->backHighscores = loadTexture(imgPath, renderer);
-    if (textures->backHighscores == NULL) goto ERROR_LABEL;
+    if (textures->backHighscores == NULL) {
+        goto ERROR_LABEL;
+    }
 
     return textures;
 
@@ -97,39 +110,38 @@ ERROR_LABEL:
     return NULL;
 }
 
-
 void freeTextures(Textures *textures)
 {
     int i;
 
-    if (textures)
-    {
-        for (i = 0; i < MAX_STRINGS; i++)
-        {
+    if (textures) {
+        for (i = 0; i < MAX_STRINGS; i++) {
             // Lib�ration de la note
-            if (textures->notes[i])
+            if (textures->notes[i]) {
                 destroyTexture(textures->notes[i]);
+            }
         }
 
         // Lib�ration du fond de la zone de jeu
-        if (textures->gameArea)
+        if (textures->gameArea) {
             destroyTexture(textures->gameArea);
+        }
 
         // Lib�ration du fond de la zone de jeu
-        if (textures->string)
+        if (textures->string) {
             destroyTexture(textures->string);
+        }
 
         free(textures);
     }
 }
 
-SDL_Texture * loadTexture(char *imgPath, SDL_Renderer *renderer)
+SDL_Texture *loadTexture(char *imgPath, SDL_Renderer *renderer)
 {
     SDL_Texture *texture = NULL;
 
     texture = IMG_LoadTexture(renderer, imgPath);
-    if (!texture)
-    {
+    if (!texture) {
         fprintf(stderr, "Erreur de chargement de la texture : %s\n", imgPath);
         fprintf(stderr, "  SDL : %s\n", SDL_GetError());
     }
@@ -137,7 +149,7 @@ SDL_Texture * loadTexture(char *imgPath, SDL_Renderer *renderer)
     return texture;
 }
 
-void destroyTexture(SDL_Texture * texture)
+void destroyTexture(SDL_Texture *texture)
 {
     SDL_DestroyTexture(texture);
 }

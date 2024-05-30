@@ -1,7 +1,7 @@
 #ifdef _WIN32
-	#include <SDL.h>
+    #include <SDL.h>
 #else
-	#include <SDL2/SDL.h>
+    #include <SDL2/SDL.h>
 #endif
 
 #include <stdio.h>
@@ -11,26 +11,23 @@
 #include "../GameModel/model.h"
 #include "gameKeys.h"
 
-
-SDLGameConfig * newGameConfig(int pianoMode)
+SDLGameConfig *newGameConfig(int pianoMode)
 {
-    SDLGameConfig * config = NULL;
+    SDLGameConfig *config = NULL;
     config = (SDLGameConfig *)calloc(1, sizeof(SDLGameConfig));
-    if (!config)
+    if (!config) {
         return NULL;
+    }
 
     config->pianoMode = pianoMode;
 
-    if (pianoMode==1)
-    {
+    if (pianoMode == 1) {
         config->fretValues[0] = SDL_SCANCODE_Q;
         config->fretValues[1] = SDL_SCANCODE_W;
         config->fretValues[2] = SDL_SCANCODE_E;
         config->fretValues[3] = SDL_SCANCODE_R;
         config->fretValues[4] = SDL_SCANCODE_SPACE;
-    }
-    else
-    {
+    } else {
         config->fretValues[0] = SDL_SCANCODE_F1;
         config->fretValues[1] = SDL_SCANCODE_F2;
         config->fretValues[2] = SDL_SCANCODE_F3;
@@ -44,24 +41,24 @@ SDLGameConfig * newGameConfig(int pianoMode)
     return config;
 }
 
-void freeGameConfig(SDLGameConfig * config)
+void freeGameConfig(SDLGameConfig *config)
 {
     free(config);
 }
 
-GameKeys * newGameKeys()
+GameKeys *newGameKeys()
 {
-    GameKeys * gameKeys = NULL;
+    GameKeys *gameKeys = NULL;
     gameKeys = (GameKeys *)calloc(1, sizeof(GameKeys));
     return gameKeys;
 }
 
-void freeGameKeys(GameKeys * gameKeys)
+void freeGameKeys(GameKeys *gameKeys)
 {
     free(gameKeys);
 }
 
-void processGameEvents(SDLGameConfig * config, GameKeys * gameKeys, char * nomfichier, int *  highScores, int points)
+void processGameEvents(SDLGameConfig *config, GameKeys *gameKeys, char *nomfichier, int *highScores, int points)
 {
     SDL_Event evt;
     SDL_Scancode scanCode;
@@ -75,86 +72,70 @@ void processGameEvents(SDLGameConfig * config, GameKeys * gameKeys, char * nomfi
 
     // TODO : G�rer les actions de l'utilisateur
 
-    while ( SDL_PollEvent( &evt ) )
-    {
-        switch ( evt.type )
-        {
-        case SDL_QUIT: //......................................................................... La fen�tre est ferm�e
-            gameKeys->quitDown = 1;
-            break;
-
-        case SDL_KEYDOWN: //..................................................................... Une touche est appuy�e
-            scanCode = evt.key.keysym.scancode;
-
-						for(int i = 0 ; i < MAX_STRINGS ; i++)
-						{
-
-							if(scanCode == config->fretValues[i])
-							{
-
-								gameKeys->fretDown[i] = 1;
-
-							}
-
-
-						}
-
-						if (scanCode == config->strumValue)
-  							gameKeys->strumDown = 1;
-
-
-            if ( evt.key.repeat )
+    while (SDL_PollEvent(&evt)) {
+        switch (evt.type) {
+            case SDL_QUIT: //......................................................................... La fen�tre est ferm�e
+                gameKeys->quitDown = 1;
                 break;
 
-            // Touche retour vers le menu
-            if ( scanCode == config->exitValue )
-            {
-								FILE * pFichier = NULL;
-								pFichier = fopen(nomfichier, "w");
+            case SDL_KEYDOWN: //..................................................................... Une touche est appuy�e
+                scanCode = evt.key.keysym.scancode;
 
-								//les highs sont géré ici pour qu'il soient enregistré lors de la fermeture du jeu
-								for(int i = 0; i < 3; i++)
-								{
-									//boucle permettant le test pour savoir  si on vient de faire un pb (personal best)
-									if(highScores[i] < points) 
-									{
-										//boucles pour trier les meilleurs scores
-										if(i + 1 < 3)
-										{
-											if(i + 2 < 3)
-											{
-												highScores[i+2] = highScores[i+1];
-											}
-											highScores[i+1] = highScores[i];
-										}
-										highScores[i] = points;
-										i = 3;
-									}
-								}
-								//ecriture dans le fichier des highscores
-								fprintf(pFichier,"1 - %d\n", highScores[0]);
-								fprintf(pFichier,"2 - %d\n", highScores[1]);
-								fprintf(pFichier,"3 - %d\n", highScores[2]);
-                gameKeys->exitDown = 1;
-            }
-            break;
+                for (int i = 0; i < MAX_STRINGS; i++) {
 
-        case SDL_KEYUP: //...................................................................... Une touche est relach�e
+                    if (scanCode == config->fretValues[i]) {
 
-						scanCode = evt.key.keysym.scancode;
+                        gameKeys->fretDown[i] = 1;
+                    }
+                }
 
+                if (scanCode == config->strumValue) {
+                    gameKeys->strumDown = 1;
+                }
 
-						for(int i = 0 ; i < MAX_STRINGS ; i++)
-						{
+                if (evt.key.repeat) {
+                    break;
+                }
 
-							if(scanCode == config->fretValues[i])
-							{
+                // Touche retour vers le menu
+                if (scanCode == config->exitValue) {
+                    FILE *pFichier = NULL;
+                    pFichier = fopen(nomfichier, "w");
 
-								gameKeys->fretDown[i] = 0;
+                    // les highs sont géré ici pour qu'il soient enregistré lors de la fermeture du jeu
+                    for (int i = 0; i < 3; i++) {
+                        // boucle permettant le test pour savoir  si on vient de faire un pb (personal best)
+                        if (highScores[i] < points) {
+                            // boucles pour trier les meilleurs scores
+                            if (i + 1 < 3) {
+                                if (i + 2 < 3) {
+                                    highScores[i + 2] = highScores[i + 1];
+                                }
+                                highScores[i + 1] = highScores[i];
+                            }
+                            highScores[i] = points;
+                            i = 3;
+                        }
+                    }
+                    // ecriture dans le fichier des highscores
+                    fprintf(pFichier, "1 - %d\n", highScores[0]);
+                    fprintf(pFichier, "2 - %d\n", highScores[1]);
+                    fprintf(pFichier, "3 - %d\n", highScores[2]);
+                    gameKeys->exitDown = 1;
+                }
+                break;
 
-							}
+            case SDL_KEYUP: //...................................................................... Une touche est relach�e
 
-        	}
-    	}
-		}
+                scanCode = evt.key.keysym.scancode;
+
+                for (int i = 0; i < MAX_STRINGS; i++) {
+
+                    if (scanCode == config->fretValues[i]) {
+
+                        gameKeys->fretDown[i] = 0;
+                    }
+                }
+        }
+    }
 }

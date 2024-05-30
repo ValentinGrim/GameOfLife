@@ -11,11 +11,9 @@ varlen vlength(byte **track, long *trackLen)
     byte *cp = *track;
 
     trackLen--;
-    if ((value = *cp++) & 0x80)
-    {
+    if ((value = *cp++) & 0x80) {
         value &= 0x7F;
-        do
-        {
+        do {
             value = (value << 7) | ((ch = *cp++) & 0x7F);
             trackLen--;
         } while (ch & 0x80);
@@ -45,11 +43,9 @@ varlen midiReadVarLen(FILE *midiFile)
     long value;
     int ch;
 
-    if ((value = getc(midiFile)) & 0x80)
-    {
+    if ((value = getc(midiFile)) & 0x80) {
         value &= 0x7F;
-        do
-        {
+        do {
             value = (value << 7) | ((ch = getc(midiFile)) & 0x7F);
         } while (ch & 0x80);
     }
@@ -63,8 +59,7 @@ int midiReadFileHeader(FILE *midiFile, Midi *midi)
 
     fread(chunkType, sizeof(char), 4, midiFile);
 
-    if (memcmp(chunkType, "MThd", 4 * sizeof(char)) != 0)
-    {
+    if (memcmp(chunkType, "MThd", 4 * sizeof(char)) != 0) {
         fprintf(stderr, "Not a Standard MIDI File.\n");
         return 2;
     }
@@ -82,8 +77,7 @@ int midiReadTrackHeader(FILE *midiFile, int *trackLen)
     char chunkType[4];
 
     fread(chunkType, sizeof(char), 4, midiFile);
-    if (memcmp(chunkType, "MTrk", 4 * sizeof(char)) != 0)
-    {
+    if (memcmp(chunkType, "MTrk", 4 * sizeof(char)) != 0) {
         fprintf(stderr, "Track header is invalid.\n");
         return 2;
     }
@@ -92,7 +86,7 @@ int midiReadTrackHeader(FILE *midiFile, int *trackLen)
     return EXIT_SUCCESS;
 }
 
-Midi* newMidi(FILE *midiFile)
+Midi *newMidi(FILE *midiFile)
 {
     Midi *midi = NULL;
     int i, trackIdx;
@@ -100,11 +94,12 @@ Midi* newMidi(FILE *midiFile)
     int trackLen;
     int maxNbEvt;
     int totalNbNotes;
-    int   *tracksLen; // Longueurs des pistes
-    byte **tracks;    // Pistes
+    int *tracksLen; // Longueurs des pistes
+    byte **tracks;  // Pistes
 
-    if (!midiFile)
+    if (!midiFile) {
         return NULL;
+    }
     rewind(midiFile);
 
     midi = (Midi *)calloc(1, sizeof(Midi));
@@ -122,8 +117,7 @@ Midi* newMidi(FILE *midiFile)
     //******************************************************************************************************************
     // Lecture des headers et des pistes
 
-    for (i = 0; i < nbTracks; i++)
-    {
+    for (i = 0; i < nbTracks; i++) {
         /* Lecture du header de la piste */
         midiReadTrackHeader(midiFile, &tracksLen[i]);
 
@@ -136,15 +130,14 @@ Midi* newMidi(FILE *midiFile)
     }
 
     //******************************************************************************************************************
-    // Analyse des événements midi
+    // Analyse des ï¿½vï¿½nements midi
 
     maxNbEvt = 0;
-    for (i = 0; i < nbTracks; i++)
-    {
+    for (i = 0; i < nbTracks; i++) {
         maxNbEvt += tracksLen[i];
     }
 
-    // Allocation des évenements
+    // Allocation des ï¿½venements
 
     midi->nbNotes = (int *)calloc(nbTracks, sizeof(int));
     midi->notes = (NoteEvt **)calloc(nbTracks, sizeof(NoteEvt *));
@@ -153,8 +146,7 @@ Midi* newMidi(FILE *midiFile)
     midi->tempos = (SetTempoEvt *)calloc(maxNbEvt, sizeof(SetTempoEvt));
 
     totalNbNotes = 0;
-    for (trackIdx = 0; trackIdx < nbTracks; trackIdx++)
-    {
+    for (trackIdx = 0; trackIdx < nbTracks; trackIdx++) {
         // Initialisation du pointeur sur les notes
         midi->notes[trackIdx] = midi->notes[0] + totalNbNotes;
 
@@ -165,10 +157,9 @@ Midi* newMidi(FILE *midiFile)
     }
 
     //******************************************************************************************************************
-    // Libération de la mémoire
+    // Libï¿½ration de la mï¿½moire
 
-    for (i = 0; i < nbTracks; i++)
-    {
+    for (i = 0; i < nbTracks; i++) {
         free(tracks[i]);
     }
     free(tracks);
@@ -191,25 +182,20 @@ void midiReadTrack(const int trackIdx, byte *track, long trackLen, Midi *midi)
 
     // Allocation
 
-    while (trackLen > 0)
-    {
+    while (trackLen > 0) {
         varlen tlapse = vlength(&track, &trackLen);
         absMidiTime += tlapse;
 
         // Handle running status; if the next byte is a data byte, reuse the last command seen in the track.
 
-        if (*track & 0x80)
-        {
+        if (*track & 0x80) {
             evt = *track++;
 
-            if ((evt & 0xF0) != 0xF0)
-            {
+            if ((evt & 0xF0) != 0xF0) {
                 levt = evt;
             }
             trackLen--;
-        }
-        else
-        {
+        } else {
             evt = levt;
         }
 
@@ -218,168 +204,156 @@ void midiReadTrack(const int trackIdx, byte *track, long trackLen, Midi *midi)
         //**************************************************************************************************************
         // Channel messages
 
-        switch (evt & 0xF0)
-        {
+        switch (evt & 0xF0) {
 
-        case noteOff: //....................................................................................... Note off
-            if (trackLen < 2)
-            {
-                return;
-            }
-            trackLen -= 2;
-            note = *track++;
-            velocity = *track++;
+            case noteOff: //....................................................................................... Note off
+                if (trackLen < 2) {
+                    return;
+                }
+                trackLen -= 2;
+                note = *track++;
+                velocity = *track++;
 
-            midi->notes[trackIdx][noteIdx].apearingMidiTime = absMidiTime;
-            midi->notes[trackIdx][noteIdx].channel = channel;
-            midi->notes[trackIdx][noteIdx].note = note;
-            midi->notes[trackIdx][noteIdx].velocity = 0;
-            noteIdx++;
-            continue;
+                midi->notes[trackIdx][noteIdx].apearingMidiTime = absMidiTime;
+                midi->notes[trackIdx][noteIdx].channel = channel;
+                midi->notes[trackIdx][noteIdx].note = note;
+                midi->notes[trackIdx][noteIdx].velocity = 0;
+                noteIdx++;
+                continue;
 
-        case noteOn: //......................................................................................... Note on
-            if (trackLen < 2)
-            {
-                return;
-            }
-            trackLen -= 2;
-            note = *track++;
-            velocity = *track++;
+            case noteOn: //......................................................................................... Note on
+                if (trackLen < 2) {
+                    return;
+                }
+                trackLen -= 2;
+                note = *track++;
+                velocity = *track++;
 
-            midi->notes[trackIdx][noteIdx].apearingMidiTime = absMidiTime;
-            midi->notes[trackIdx][noteIdx].channel = channel;
-            midi->notes[trackIdx][noteIdx].note = note;
-            midi->notes[trackIdx][noteIdx].velocity = velocity;
-            noteIdx++;
-            continue;
+                midi->notes[trackIdx][noteIdx].apearingMidiTime = absMidiTime;
+                midi->notes[trackIdx][noteIdx].channel = channel;
+                midi->notes[trackIdx][noteIdx].note = note;
+                midi->notes[trackIdx][noteIdx].velocity = velocity;
+                noteIdx++;
+                continue;
 
-        case polyphonicKeyPressure: //....................................................................... Aftertouch
-            if (trackLen < 2)
-            {
-                return;
-            }
-            trackLen -= 2;
-            note = *track++;
-            velocity = *track++;
-            continue;
+            case polyphonicKeyPressure: //....................................................................... Aftertouch
+                if (trackLen < 2) {
+                    return;
+                }
+                trackLen -= 2;
+                note = *track++;
+                velocity = *track++;
+                continue;
 
-        case controlChange: //........................................................................... Control change
-            if (trackLen < 2)
-            {
-                return;
-            }
-            trackLen -= 2;
-            control = *track++;
-            value = *track++;
-            continue;
+            case controlChange: //........................................................................... Control change
+                if (trackLen < 2) {
+                    return;
+                }
+                trackLen -= 2;
+                control = *track++;
+                value = *track++;
+                continue;
 
-        case programChange: //........................................................................... Program change
-            if (trackLen < 1)
-            {
-                return;
-            }
-            trackLen--;
-            note = *track++;
-            continue;
+            case programChange: //........................................................................... Program change
+                if (trackLen < 1) {
+                    return;
+                }
+                trackLen--;
+                note = *track++;
+                continue;
 
-        case channelPressure: //.......................................................... Channel pressure (aftertouch)
-            if (trackLen < 1)
-            {
-                return;
-            }
-            trackLen--;
-            velocity = *track++;
-            continue;
+            case channelPressure: //.......................................................... Channel pressure (aftertouch)
+                if (trackLen < 1) {
+                    return;
+                }
+                trackLen--;
+                velocity = *track++;
+                continue;
 
-        case pitchBend: //................................................................................... Pitch bend
-            if (trackLen < 1)
-            {
-                return;
-            }
-            trackLen--;
-            value = *track++;
-            value = value | ((*track++) << 7);
-            continue;
+            case pitchBend: //................................................................................... Pitch bend
+                if (trackLen < 1) {
+                    return;
+                }
+                trackLen--;
+                value = *track++;
+                value = value | ((*track++) << 7);
+                continue;
 
-        default: //............................................................................... Unkonwn channel event
-            break;
+            default: //............................................................................... Unkonwn channel event
+                break;
         }
 
-        switch (evt)
-        {
+        switch (evt) {
 
-            //**********************************************************************************************************
-            // System exclusive messages
+                //**********************************************************************************************************
+                // System exclusive messages
 
-        case systemExclusive:
-        case systemExclusivePacket:
-            length = vlength(&track, &trackLen);
-            track += length;
-            trackLen -= length;
-            break;
-
-            //**********************************************************************************************************
-            // File meta-events
-
-        case fileMetaEvent:
-
-            if (trackLen < 2)
-            {
-                return;
-            }
-            trackLen -= 2;
-            type = *track++;
-            length = vlength(&track, &trackLen);
-            trackItem = track;
-            track += length;
-            trackLen -= length;
-
-            switch (type)
-            {
-            case endTrackMetaEvent: //................................................................. End of the track
-                trackLen = -1;
+            case systemExclusive:
+            case systemExclusivePacket:
+                length = vlength(&track, &trackLen);
+                track += length;
+                trackLen -= length;
                 break;
 
-            case setTempoMetaEvent: //........................................................................ Set tempo
-                msPerBeat = (trackItem[0] << 16) | (trackItem[1] << 8) | trackItem[2];
-                midi->tempos[tempoIdx].apearingMidiTime = absMidiTime;
-                midi->tempos[tempoIdx].channel = channel;
-                midi->tempos[tempoIdx].msPerBeat = msPerBeat;
-                tempoIdx++;
+                //**********************************************************************************************************
+                // File meta-events
+
+            case fileMetaEvent:
+
+                if (trackLen < 2) {
+                    return;
+                }
+                trackLen -= 2;
+                type = *track++;
+                length = vlength(&track, &trackLen);
+                trackItem = track;
+                track += length;
+                trackLen -= length;
+
+                switch (type) {
+                    case endTrackMetaEvent: //................................................................. End of the track
+                        trackLen = -1;
+                        break;
+
+                    case setTempoMetaEvent: //........................................................................ Set tempo
+                        msPerBeat = (trackItem[0] << 16) | (trackItem[1] << 8) | trackItem[2];
+                        midi->tempos[tempoIdx].apearingMidiTime = absMidiTime;
+                        midi->tempos[tempoIdx].channel = channel;
+                        midi->tempos[tempoIdx].msPerBeat = msPerBeat;
+                        tempoIdx++;
+                        break;
+
+                    case timeSignatureMetaEvent: //.............................................................. Time signature
+                        // printf("  Beat : %d, Channel : %d, Time_signature, %d, %d, %d, %d\n",
+                        //     absMidiTime, channel,
+                        //     trackItem[0], trackItem[1], trackItem[2], trackItem[3]);
+                        break;
+
+                    case sequencerSpecificMetaEvent:
+                    case sequenceNumberMetaEvent:
+                    case textMetaEvent:
+                    case copyrightMetaEvent:
+                    case trackTitleMetaEvent:
+                    case trackInstrumentNameMetaEvent:
+                    case lyricMetaEvent:
+                    case markerMetaEvent:
+                    case cuePointMetaEvent:
+                    case channelPrefixMetaEvent:
+                    case portMetaEvent:
+                    case smpteOffsetMetaEvent:
+                    case keySignatureMetaEvent:
+                        break;
+
+                    default: //.............................................................................. Unknown meta event
+                        break;
+                }
                 break;
 
-            case timeSignatureMetaEvent: //.............................................................. Time signature
-                //printf("  Beat : %d, Channel : %d, Time_signature, %d, %d, %d, %d\n",
-                //    absMidiTime, channel,
-                //    trackItem[0], trackItem[1], trackItem[2], trackItem[3]);
+                //**********************************************************************************************************
+                // Unknown events
+
+            default: //....................................................................................... Unknown event
                 break;
-
-            case sequencerSpecificMetaEvent:
-            case sequenceNumberMetaEvent:
-            case textMetaEvent:
-            case copyrightMetaEvent:
-            case trackTitleMetaEvent:
-            case trackInstrumentNameMetaEvent:
-            case lyricMetaEvent:
-            case markerMetaEvent:
-            case cuePointMetaEvent:
-            case channelPrefixMetaEvent:
-            case portMetaEvent:
-            case smpteOffsetMetaEvent:
-            case keySignatureMetaEvent:
-                break;
-
-            default: //.............................................................................. Unknown meta event
-                break;
-            }
-            break;
-
-
-            //**********************************************************************************************************
-            // Unknown events
-
-        default: //....................................................................................... Unknown event
-            break;
         }
     }
 
@@ -389,15 +363,19 @@ void midiReadTrack(const int trackIdx, byte *track, long trackLen, Midi *midi)
 
 void freeMidi(Midi *midi)
 {
-    if (midi)
-    {
-        if (midi->nbNotes != NULL) free(midi->nbNotes);
-        if (midi->notes != NULL)
-        {
-            if (midi->notes[0] != NULL) free(midi->notes[0]);
+    if (midi) {
+        if (midi->nbNotes != NULL) {
+            free(midi->nbNotes);
+        }
+        if (midi->notes != NULL) {
+            if (midi->notes[0] != NULL) {
+                free(midi->notes[0]);
+            }
             free(midi->notes);
         }
-        if (midi->tempos != NULL) free(midi->tempos);
+        if (midi->tempos != NULL) {
+            free(midi->tempos);
+        }
         free(midi);
     }
 }

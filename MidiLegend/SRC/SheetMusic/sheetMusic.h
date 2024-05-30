@@ -7,33 +7,33 @@
 
 typedef struct Note_s
 {
-    int   value;
-    int   stringIdx;
-    float appearingBeat;
-    float durationBeat;
-    float appearingTime;
-    float durationTime;
+        int value;
+        int stringIdx;
+        float appearingBeat;
+        float durationBeat;
+        float appearingTime;
+        float durationTime;
 } Note;
 
 typedef struct Tempo_s
 {
-    int msPerBeat;
-    float appearingBeat;
-    float appearingTime;
+        int msPerBeat;
+        float appearingBeat;
+        float appearingTime;
 } Tempo;
 
 typedef struct SheetMusic_s
 {
-    int    nbStrings;
-    int    nbStaves; // Nombre de portées
-    int   *nbNotes;
-    Note **notes;
+        int nbStrings;
+        int nbStaves; // Nombre de portï¿½es
+        int *nbNotes;
+        Note **notes;
 
-    int    nbTempos; // Nombre de variation de tempo
-    Tempo *tempos;
+        int nbTempos; // Nombre de variation de tempo
+        Tempo *tempos;
 } SheetMusic;
 
-SheetMusic* newSheetMusic(FILE *midiFile);
+SheetMusic *newSheetMusic(FILE *midiFile);
 void freeSheetMusic(SheetMusic *sheet);
 
 void fprintNoteValue(FILE *file, Note *note);

@@ -1,9 +1,9 @@
 #ifdef _WIN32
-	#include <SDL.h>
-	#include <SDL_image.h>
+    #include <SDL.h>
+    #include <SDL_image.h>
 #else
-	#include <SDL2/SDL.h>
-	#include <SDL2/SDL_image.h>
+    #include <SDL2/SDL.h>
+    #include <SDL2/SDL_image.h>
 #endif
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,25 +11,25 @@
 
 #include "mainWindow.h"
 
-MainWindow * newMainWindow()
+MainWindow *newMainWindow()
 {
     MainWindow *mainWindow = NULL;
 
     mainWindow = (MainWindow *)calloc(1, sizeof(MainWindow));
-    if (!mainWindow)
+    if (!mainWindow) {
         return NULL;
+    }
 
     mainWindow->window = SDL_CreateWindow("Teubies Legend", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 0);
-    //mainWindow->window = SDL_CreateWindow( "Midi Legend", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_FULLSCREEN );
-    if (!mainWindow->window)
-    {
+    // mainWindow->window = SDL_CreateWindow( "Midi Legend", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT,
+    // SDL_WINDOW_FULLSCREEN );
+    if (!mainWindow->window) {
         printf("SDL_CreateWindow Error: %s\n", SDL_GetError());
         goto ERROR_LABEL;
     }
 
     mainWindow->renderer = SDL_CreateRenderer(mainWindow->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (!mainWindow->renderer)
-    {
+    if (!mainWindow->renderer) {
         printf("SDL_CreateRenderer Error: %s\n", SDL_GetError());
         goto ERROR_LABEL;
     }
@@ -45,16 +45,13 @@ ERROR_LABEL:
     return NULL;
 }
 
-void freeMainWindow(MainWindow * mainWindow)
+void freeMainWindow(MainWindow *mainWindow)
 {
-    if (mainWindow)
-    {
-        if (mainWindow->window)
-        {
+    if (mainWindow) {
+        if (mainWindow->window) {
             SDL_DestroyWindow(mainWindow->window);
         }
-        if (mainWindow->renderer)
-        {
+        if (mainWindow->renderer) {
             SDL_DestroyRenderer(mainWindow->renderer);
         }
         free(mainWindow);
@@ -64,15 +61,13 @@ void freeMainWindow(MainWindow * mainWindow)
 int initSDL()
 {
     // Initialisation de la SDL
-    if (SDL_Init(SDL_INIT_VIDEO) != 0)
-    {
+    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         printf("SDL_Init Error: %s\n", SDL_GetError());
         return EXIT_FAILURE;
     }
 
     // Initialisation de SDL Image
-    if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG)
-    {
+    if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG) {
         printf("IMG_Init Error: %s\n", IMG_GetError());
         return EXIT_FAILURE;
     }

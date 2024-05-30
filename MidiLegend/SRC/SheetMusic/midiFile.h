@@ -9,33 +9,33 @@ typedef unsigned long varlen;
 
 typedef struct NoteEvt_s
 {
-    int apearingMidiTime;
-    int channel;
-    int note;
-    int velocity;
+        int apearingMidiTime;
+        int channel;
+        int note;
+        int velocity;
 } NoteEvt;
 
 typedef struct SetTempoEvt_s
 {
-    int apearingMidiTime;
-    int channel;
-    int msPerBeat;
+        int apearingMidiTime;
+        int channel;
+        int msPerBeat;
 } SetTempoEvt;
 
 typedef struct Midi_s
 {
-    int format;    // Format du fichier midi
-    int division;  // Nombre de division d'un beat
-    int nbTracks;  // Nombre de pistes
+        int format;   // Format du fichier midi
+        int division; // Nombre de division d'un beat
+        int nbTracks; // Nombre de pistes
 
-    int       *nbNotes;  // Nombre de notes ON par piste
-    NoteEvt  **notes;    // Les notes ON
+        int *nbNotes;    // Nombre de notes ON par piste
+        NoteEvt **notes; // Les notes ON
 
-    int          nbTempos;  // Le nombre de changement de temp
-    SetTempoEvt *tempos;    // les changements de tempo
+        int nbTempos;        // Le nombre de changement de temp
+        SetTempoEvt *tempos; // les changements de tempo
 } Midi;
 
-Midi* newMidi(FILE *midiFile);
+Midi *newMidi(FILE *midiFile);
 void freeMidi(Midi *midi);
 
 int midiReadFileHeader(FILE *midiFile, Midi *midi);
@@ -72,7 +72,6 @@ typedef enum MidiCommand_e
     // MIDI file-only messages
     fileMetaEvent = 0xFF
 } MidiCommand;
-
 
 typedef enum MidiMetaEvent_e
 {

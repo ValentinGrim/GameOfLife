@@ -4,19 +4,19 @@
 
 typedef struct Timer_s
 {
-    float startTime;
-    float currentTime;
-    float previousTime;
-    float timeBeforeStrum;
-    float timeAfterStrum;
-    float delta;
-    float relSpeed;
+        float startTime;
+        float currentTime;
+        float previousTime;
+        float timeBeforeStrum;
+        float timeAfterStrum;
+        float delta;
+        float relSpeed;
 } Timer;
 
-Timer * newTimer(float relSpeed);
-void freeTimer(Timer * timer);
+Timer *newTimer(float relSpeed);
+void freeTimer(Timer *timer);
 
-void startTimer(Timer * timer);
-void updateTimer(Timer * timer);
+void startTimer(Timer *timer);
+void updateTimer(Timer *timer);
 
 #endif

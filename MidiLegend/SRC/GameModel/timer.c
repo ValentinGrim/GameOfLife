@@ -7,13 +7,14 @@
 #include "timer.h"
 #include "model.h"
 
-Timer * newTimer(float relSpeed)
+Timer *newTimer(float relSpeed)
 {
     Timer *timer = NULL;
 
     timer = (Timer *)calloc(1, sizeof(Timer));
-    if (!timer)
+    if (!timer) {
         return NULL;
+    }
 
     timer->relSpeed = relSpeed;
     timer->timeBeforeStrum = STRUM_AREA / relSpeed;
@@ -25,15 +26,16 @@ Timer * newTimer(float relSpeed)
     return timer;
 }
 
-void freeTimer(Timer * timer)
+void freeTimer(Timer *timer)
 {
     free(timer);
 }
 
 void startTimer(Timer *timer)
 {
-    if (!timer)
+    if (!timer) {
         return;
+    }
 
     timer->startTime = SDL_GetTicks() / 1000.f;
     timer->currentTime = -(timer->timeBeforeStrum);
