@@ -2,7 +2,7 @@
 BasedOnStyle: Microsoft
 UseTab: Never
 Standard: c++14
-ColumnLimit: 120
+ColumnLimit: 160
 IndentWidth: 4
 SortIncludes: Never
 InsertBraces: true

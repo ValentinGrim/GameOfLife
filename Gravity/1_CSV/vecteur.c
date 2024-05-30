@@ -11,29 +11,29 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-Vecteur creerVect(float x,float y)    // Retourne une structure Vecteur initialisée à (x,y)
+Vecteur creerVect(float x, float y) // Retourne une structure Vecteur initialisée à (x,y)
 {
-	Vecteur v;
-	v.x=x;
-	v.y=y;
+    Vecteur v;
+    v.x = x;
+    v.y = y;
 
-	return v;
+    return v;
 }
 
-Vecteur multScalVect(float s,Vecteur v)   // Multiplie un scalaire avec un vecteur et retourne le resultat
+Vecteur multScalVect(float s, Vecteur v) // Multiplie un scalaire avec un vecteur et retourne le resultat
 {
-	Vecteur v1;
-	v1.x=s*v.x;
-	v1.y=s*v.y;
+    Vecteur v1;
+    v1.x = s * v.x;
+    v1.y = s * v.y;
 
-	return v1;
+    return v1;
 }
 
-Vecteur addVect(Vecteur v1,Vecteur v2)   // Additionne 2 vecteurs et retourne le resultat
+Vecteur addVect(Vecteur v1, Vecteur v2) // Additionne 2 vecteurs et retourne le resultat
 {
-	Vecteur v3;
-	v3.x=v1.x+v2.x;
-	v3.y=v1.y+v2.y;
+    Vecteur v3;
+    v3.x = v1.x + v2.x;
+    v3.y = v1.y + v2.y;
 
-	return v3;
+    return v3;
 }

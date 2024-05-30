@@ -11,22 +11,21 @@
 
 #include "vecteur.h"
 
-
-typedef struct Balle_decl             // Définition de la structure Balle_decl
+typedef struct Balle_decl // Définition de la structure Balle_decl
 {
 
-  float masse;              //Kilo
-  float coeffriction;
-  Vecteur position;         //m
-  Vecteur vitesse;          // m/s
-  Vecteur acceleration;     // m/s2
-  struct Balle_decl * ballePrecedente;
-  struct Balle_decl * balleSuivante;
+        float masse; // Kilo
+        float coeffriction;
+        Vecteur position;     // m
+        Vecteur vitesse;      // m/s
+        Vecteur acceleration; // m/s2
+        struct Balle_decl *ballePrecedente;
+        struct Balle_decl *balleSuivante;
 
 } Balle;
 
-Balle chargerBalle(char * argc);        // Prototype de la fonction chargerBalle
+Balle chargerBalle(char *argc); // Prototype de la fonction chargerBalle
 
-int majPosition(Balle * Balle ,float dt); // Prototype de la fonction majPosition
+int majPosition(Balle *Balle, float dt); // Prototype de la fonction majPosition
 
 #endif /* balle_h */

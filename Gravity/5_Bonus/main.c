@@ -11,44 +11,28 @@
 
 int main()
 {
+    config cfg;
 
-  config cfg;
+    cfg.size_x = 512;
+    cfg.size_y = 512;
+    cfg.music_state = 1;
+    cfg.ball_v = 1;
+    cfg.nbballs = 5;
+    cfg.clear = 1;
 
-  cfg.size_x = 512;
-  cfg.size_y = 512;
-  cfg.music_state = 1;
-  cfg.ball_v = 1;
-  cfg.nbballs = 5;
-  cfg.clear = 1;
+    int continuer = 1;
 
-  int continuer = 1;
-
-  while(continuer == 1)
-  {
-
-    if(continuer == 1)
-    {
-
-      continuer = sdlMenu(cfg);
-
+    while (continuer == 1) {
+        if (continuer == 1) {
+            continuer = sdlMenu(cfg);
+        }
+        if (continuer == 2) {
+            continuer = sdlPlay(cfg);
+        }
+        if (continuer == 3) {
+            continuer = sdlSettings(&cfg);
+        }
     }
 
-    if(continuer == 2)
-    {
-
-      continuer = sdlPlay(cfg);
-
-    }
-
-    if(continuer == 3)
-    {
-
-       continuer = sdlSettings(&cfg);
-
-    }
-
-  }
-
-  return 0;
-
+    return 0;
 }

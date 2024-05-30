@@ -4,8 +4,8 @@
 typedef struct CliqueSouris_Position
 {
 
-  int x;
-  int y;
+        int x;
+        int y;
 
-}bLeft;
+} bLeft;
 #endif

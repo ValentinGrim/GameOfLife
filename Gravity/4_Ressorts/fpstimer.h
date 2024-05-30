@@ -1,19 +1,19 @@
 #ifndef FPSTIMER_H_INCLUDED
 #define FPSTIMER_H_INCLUDED
 
-//#define SDL_TIMER
+// #define SDL_TIMER
 
 #ifdef SDL_TIMER
-#include <SDL/SDL.h>
-    float fpsGetElapsed();
-    float fpsGetDeltaTime();
+    #include <SDL/SDL.h>
+float fpsGetElapsed();
+float fpsGetDeltaTime();
 
 #else
-    // get elapsed time since init
-    double fpsGetElapsed();
+// get elapsed time since init
+double fpsGetElapsed();
 
-    // get elapsed time in seconds since last call of fpsStep()
-    double fpsGetDeltaTime();
+// get elapsed time in seconds since last call of fpsStep()
+double fpsGetDeltaTime();
 #endif
 
 // get framerate

@@ -9,20 +9,18 @@
 #ifndef vecteur_h
 #define vecteur_h
 
-typedef struct Vecteur_decl			// Définition de la structure Vecteur_decl
+typedef struct Vecteur_decl // Définition de la structure Vecteur_decl
 {
-	float x;
-	float y;
+        float x;
+        float y;
 } Vecteur;
 
-Vecteur creerVect(float x,float y);		// Prototype de la fonction creerVect
-Vecteur multScalVect(float s, Vecteur v);	// Prototype de la fonction multScalVect
-Vecteur addVect(Vecteur v1, Vecteur v2);	// Prototype de la fonction addvect
+Vecteur creerVect(float x, float y);      // Prototype de la fonction creerVect
+Vecteur multScalVect(float s, Vecteur v); // Prototype de la fonction multScalVect
+Vecteur addVect(Vecteur v1, Vecteur v2);  // Prototype de la fonction addvect
 
-
-Vecteur normaliseVect (Vecteur v);		// Prototype de la fonction normaliseVect
-float normVect(Vecteur v);			// Prototype de la fonction normVect
-Vecteur subVect(Vecteur v1, Vecteur v2);	// Prototype de la fonction subVect
-
+Vecteur normaliseVect(Vecteur v);        // Prototype de la fonction normaliseVect
+float normVect(Vecteur v);               // Prototype de la fonction normVect
+Vecteur subVect(Vecteur v1, Vecteur v2); // Prototype de la fonction subVect
 
 #endif /* vecteur_h */
